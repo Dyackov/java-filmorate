@@ -10,8 +10,9 @@ import java.time.LocalDate;
 
 @Slf4j
 public class Validator {
+    private static final LocalDate DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
+
     public static void filmValidator(Film film) {
-        LocalDate DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
         if (film.getReleaseDate().isBefore(DATE_OF_RELEASE)) {
             log.warn("Не пройдена проверка даты релиза.");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года.");
