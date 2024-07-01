@@ -21,7 +21,7 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        Validator.userValidator(user);
+        Validator.validateUser(user);
         user.setId(getNextId());
         users.put(user.getId(), user);
         log.debug("Создан новый пользователь - {} , ID - {}.", user.getLogin(), user.getId());
@@ -38,7 +38,7 @@ public class UserController {
             log.warn("В базе нет пользователя с ID - {}.", newUser.getId());
             throw new NotFoundException("Пользователь с ID - " + newUser.getId() + " не найден");
         }
-        Validator.userValidator(newUser);
+        Validator.validateUser(newUser);
         users.put(newUser.getId(), newUser);
         log.debug("Информация о пользователе - {} , ID - {} , обновлена.", newUser.getLogin(), newUser.getId());
         return newUser;

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Validator {
     private static final LocalDate DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
 
-    public static void filmValidator(Film film) {
+    public static void validateFilm(Film film) {
         if (film.getReleaseDate().isBefore(DATE_OF_RELEASE)) {
             log.warn("Не пройдена проверка даты релиза.");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года.");
@@ -24,7 +24,7 @@ public class Validator {
         }
     }
 
-    public static void userValidator(User user) {
+    public static void validateUser(User user) {
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Не пройдена проверка даты рождения.");
             throw new ValidationException("Дата рождения не может быть в будущем.");

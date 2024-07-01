@@ -20,7 +20,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        Validator.filmValidator(film);
+        Validator.validateFilm(film);
         film.setId(getNextId());
         films.put(film.getId(), film);
         log.debug("Создан новый фильм - {} , ID - {}.", film.getName(), film.getId());
@@ -37,7 +37,7 @@ public class FilmController {
             log.warn("В базе нет фильма с ID - {}.", newFilm.getId());
             throw new NotFoundException("Фильм с ID = " + newFilm.getId() + " не найден");
         }
-        Validator.filmValidator(newFilm);
+        Validator.validateFilm(newFilm);
         films.put(newFilm.getId(), newFilm);
         log.debug("Информация о фильме - {} , ID - {} , обновлена.", newFilm.getName(), newFilm.getId());
         return newFilm;
