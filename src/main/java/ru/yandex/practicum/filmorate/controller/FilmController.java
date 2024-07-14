@@ -1,64 +1,82 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.validator.Validator;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.*;
+import java.util.List;
 
-@Getter
 @RestController
 @RequestMapping("/films")
-@Slf4j
+@RequiredArgsConstructor
 public class FilmController {
-    private final Map<Long, Film> films = new HashMap<>();
+    private final FilmService filmService;
 
+    /**
+     * PUT - пользователь ставит лайк фильму.
+     */
+    @PutMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void likeFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
+        filmService.likeFilm(filmId, userId);
+    }
+
+    /**
+     * DELETE - пользователь удаляет лайк.
+     */
+    @DeleteMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeLikeFromFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
+        filmService.removeLikeFromFilm(filmId, userId);
+    }
+
+    /**
+     * GET — возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано,
+     * возвращает первые 10.
+     */
+    @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getPopularFilms(@RequestParam(required = false) @Positive Integer count) {
+        return filmService.getPopularFilms(count);
+    }
+
+    /**
+     * POST — создание фильма.
+     */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Film create(@Valid @RequestBody Film film) {
-        Validator.validateFilm(film);
-        film.setId(getNextId());
-        films.put(film.getId(), film);
-        log.debug("Создан новый фильм - {} , ID - {}.", film.getName(), film.getId());
-        return film;
+        return filmService.createFilm(film);
     }
 
+    /**
+     * PUT — обновление фильма.
+     */
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public Film update(@Valid @RequestBody Film newFilm) {
-        if (newFilm.getId() == null) {
-            log.warn("При обновлении данных не указали ID.");
-            throw new ValidationException("ID должен быть указан.");
-        }
-        if (!films.containsKey(newFilm.getId())) {
-            log.warn("В базе нет фильма с ID - {}.", newFilm.getId());
-            throw new NotFoundException("Фильм с ID = " + newFilm.getId() + " не найден");
-        }
-        Validator.validateFilm(newFilm);
-        films.put(newFilm.getId(), newFilm);
-        log.debug("Информация о фильме - {} , ID - {} , обновлена.", newFilm.getName(), newFilm.getId());
-        return newFilm;
+        return filmService.updateFilm(newFilm);
     }
 
+    /**
+     * GET — получение всех фильмов.
+     */
     @GetMapping
-    public List<Film> findAll() {
-        log.info("Выполняется GET запрос на получение всех Фильмов.");
-        return new ArrayList<>(films.values());
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> findAllFilms() {
+        return filmService.findAllFilms();
     }
 
-    private long getNextId() {
-        long currentMaxId = films.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
-    }
-
-    public void clearFilms() {
-        films.clear();
+    /**
+     * GET — получение фильма по ID.
+     */
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Film getFilmById(@PathVariable long id) {
+        return filmService.getFilmById(id);
     }
 }
