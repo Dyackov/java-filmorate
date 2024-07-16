@@ -70,7 +70,7 @@ public class InMemoryUserStorage implements UserStorage {
     /**
      * Удаление всех пользователей.
      */
-    public void clearUsers() {
+    public void deleteAllUsers() {
         users.clear();
     }
 

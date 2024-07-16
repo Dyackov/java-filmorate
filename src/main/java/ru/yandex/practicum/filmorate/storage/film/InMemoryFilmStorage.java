@@ -70,7 +70,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     /**
      * Удаление всех фильмов.
      */
-    public void clearFilms() {
+    public void deleteAllFilms() {
         films.clear();
     }
 

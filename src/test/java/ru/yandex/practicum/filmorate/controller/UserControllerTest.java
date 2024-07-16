@@ -17,8 +17,8 @@ class UserControllerTest {
     UserStorage userStorage = new InMemoryUserStorage();
 
     @BeforeEach
-    public void clearFilms() {
-        userStorage.clearUsers();
+    public void deleteAllUsers() {
+        userStorage.deleteAllUsers();
     }
 
     @Test

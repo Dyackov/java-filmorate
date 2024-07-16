@@ -19,8 +19,8 @@ class FilmControllerTest {
     FilmStorage filmStorage = new InMemoryFilmStorage();
 
     @BeforeEach
-    public void clearFilms() {
-        filmStorage.clearFilms();
+    public void deleteAllFilms() {
+        filmStorage.deleteAllFilms();
     }
 
     @Test
