@@ -5,11 +5,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private Long id;
     @Email(message = "Электронная почта должна содержать символ @.")
@@ -21,4 +25,5 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
+    private Set<Long> friendsId = new HashSet<>();
 }
