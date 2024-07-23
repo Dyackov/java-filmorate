@@ -1,9 +1,9 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-# Схема базы данных
+# Схема базы данных 
 ***
-![text](ER_Diagram.png)
+![text](erdiargam.png)
 ***
 
 ## Описание схемы базы данных
