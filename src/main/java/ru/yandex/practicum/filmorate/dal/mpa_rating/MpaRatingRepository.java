@@ -19,8 +19,8 @@ public class MpaRatingRepository extends BaseRepository<Mpa> implements MpaRatin
         super(jdbc, mapper);
     }
 
-    private final static String FIND_ALL_QUERY = "SELECT * from mpa_rating";
-    private final static String FIND_NAME_BY_ID_QUERY = "SELECT * FROM mpa_rating WHERE rating_id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT * from mpa_rating";
+    private static final String FIND_NAME_BY_ID_QUERY = "SELECT * FROM mpa_rating WHERE rating_id = ?";
 
     @Override
     public List<Mpa> getAllMpas() {

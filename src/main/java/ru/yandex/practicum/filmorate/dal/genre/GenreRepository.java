@@ -23,9 +23,9 @@ public class GenreRepository extends BaseRepository<Genre> implements GenreStora
         super(jdbc, mapper);
     }
 
-    private final static String FIND_ALL_GENRE_QUERY = "SELECT * from genres";
-    private final static String FIND_NAME_BY_ID_GENRE_QUERY = "SELECT * FROM genres WHERE genre_id = ?";
-    private final static String FIND_All_GENRES_FOR_FILM_QUERY = """
+    private static final String FIND_ALL_GENRE_QUERY = "SELECT * from genres";
+    private static final String FIND_NAME_BY_ID_GENRE_QUERY = "SELECT * FROM genres WHERE genre_id = ?";
+    private static final String FIND_All_GENRES_FOR_FILM_QUERY = """
             SELECT g.*
             FROM genres g
             INNER JOIN films_genres fg ON g.genre_id = fg.genre_id
