@@ -161,6 +161,9 @@ public class FilmRepository extends BaseRepository<Film> implements FilmStorage 
     public List<Film> getAllFilms() {
         log.info("Получение всех фильмов из базы данных.");
         List<Film> films = findMany(FIND_ALL_FILM_QUERY);
+        if (films.isEmpty()) {
+            throw new NotFoundException("Фильмы не найдены: база данных пуста.");
+        }
         for (Film film : films) {
             setFilmDetails(film);
         }

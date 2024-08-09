@@ -24,7 +24,7 @@ public class FilmController {
      */
     @PutMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void likeFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
+    public void addLikeToFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
         log.info("Получен запрос на добавление лайка фильму с ID: {} , от пользователя c ID: {}.", filmId, userId);
         filmService.addLikeToFilm(filmId, userId);
     }
@@ -55,7 +55,7 @@ public class FilmController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film create(@Valid @RequestBody Film film) {
+    public Film createFilm(@Valid @RequestBody Film film) {
         log.info("Получен запрос на создание фильма {}.", film);
         return filmService.createFilm(film);
     }
@@ -65,7 +65,7 @@ public class FilmController {
      */
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Film update(@Valid @RequestBody Film newFilm) {
+    public Film updateFilm(@Valid @RequestBody Film newFilm) {
         log.info("Получен запрос на обновление фильма {}.", newFilm);
         return filmService.updateFilm(newFilm);
     }

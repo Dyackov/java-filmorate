@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -111,7 +110,7 @@ public class UserService {
     /**
      * Получение всех пользователей.
      */
-    public Optional<List<User>> findAll() {
+    public List<User> findAll() {
         log.info("Получение всех пользователей.");
         List<User> users = userRepository.getAllUsers();
         if (users.isEmpty()) {
@@ -119,7 +118,7 @@ public class UserService {
             throw new NoUsersFoundException("Список пользователей пуст.");
         }
         log.info("Все пользователи получены.");
-        return Optional.of(users);
+        return users;
     }
 
     /**

@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -93,7 +92,7 @@ public class UserController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Optional<List<User>> findAll() {
+    public List<User> findAll() {
         log.info("Получен запрос на получение всех пользователей.");
         return userService.findAll();
     }

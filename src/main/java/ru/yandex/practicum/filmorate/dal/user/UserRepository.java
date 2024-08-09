@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
+import ru.yandex.practicum.filmorate.exception.NoUsersFoundException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -152,6 +153,9 @@ public class UserRepository extends BaseRepository<User> implements UserStorage 
     public List<User> getAllUsers() {
         log.info("Получение всех пользователей из базы данных.");
         List<User> users = findMany(FIND_ALL_USERS_QUERY);
+        if (users.isEmpty()) {
+            throw new NoUsersFoundException("Пользователи не найдены: база данных пуста.");
+        }
         for (User user : users) {
             user.setFriendsId(getIdUserFriends(user.getId()));
         }
