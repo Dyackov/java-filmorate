@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.validator.Validator;
 
@@ -48,14 +48,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     /**
-     * Получение всех фильмов.
-     */
-    public List<Film> findAllFilms() {
-        log.info("Получение всех фильмов.");
-        return new ArrayList<>(films.values());
-    }
-
-    /**
      * Получение фильма по ID.
      */
     public Film getFilmById(long id) {
@@ -68,10 +60,44 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     /**
+     * Получение всех фильмов.
+     */
+    @Override
+    public List<Film> getAllFilms() {
+        log.info("Получение всех фильмов.");
+        return new ArrayList<>(films.values());
+    }
+
+    /**
+     * Удаление лайка.
+     */
+    @Override
+    public void removeLikeFromFilm(long filmId, long userId) {
+
+    }
+
+    /**
+     * Добавление лайка к фильму.
+     */
+    @Override
+    public void addLikeToFilm(long filmId, long userId) {
+
+    }
+
+    /**
      * Удаление всех фильмов.
      */
+    @Override
     public void deleteAllFilms() {
         films.clear();
+    }
+
+    /**
+     * Удаление фильма по ID.
+     */
+    @Override
+    public void deleteFilmById(long id) {
+        films.remove(id);
     }
 
     /**

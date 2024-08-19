@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validator.Validator;
 
@@ -21,7 +21,8 @@ public class InMemoryUserStorage implements UserStorage {
     /**
      * Создание пользователя.
      */
-    public User create(User user) {
+    @Override
+    public User createUser(User user) {
         Validator.validateUser(user);
         user.setId(getNextId());
         users.put(user.getId(), user);
@@ -32,7 +33,8 @@ public class InMemoryUserStorage implements UserStorage {
     /**
      * Обновление пользователя.
      */
-    public User update(User newUser) {
+    @Override
+    public User updateUser(User newUser) {
         if (newUser.getId() == null) {
             log.warn("При обновлении данных не указали ID.");
             throw new ValidationException("ID должен быть указан.");
@@ -50,7 +52,8 @@ public class InMemoryUserStorage implements UserStorage {
     /**
      * Получение всех пользователей.
      */
-    public List<User> findAll() {
+    @Override
+    public List<User> getAllUsers() {
         log.info("Получение всех пользователей.");
         return new ArrayList<>(users.values());
     }
@@ -58,22 +61,54 @@ public class InMemoryUserStorage implements UserStorage {
     /**
      * Получение пользователя по ID.
      */
-    public User getUserById(long id) {
-        if (!users.containsKey(id)) {
+    @Override
+    public User getUserById(long userId) {
+        if (!users.containsKey(userId)) {
             log.warn("При пользователя указали неверный ID.");
-            throw new NotFoundException("Пользователя с ID = " + id + " не существует.");
+            throw new NotFoundException("Пользователя с ID = " + userId + " не существует.");
         }
         log.info("Получение пользователя по ID.");
-        return users.get(id);
+        return users.get(userId);
     }
 
     /**
      * Удаление всех пользователей.
      */
-    public void deleteAllUsers() {
+    @Override
+    public boolean removeAllUsers() {
         users.clear();
+        return true;
     }
 
+    @Override
+    public void updateStatus(long userId, long friendId, String status) {
+
+    }
+
+    @Override
+    public void removeFriend(long userId, long friendId) {
+
+    }
+
+    @Override
+    public List<User> getAllFriends(long userId) {
+        return List.of();
+    }
+
+    @Override
+    public void addFriend(long userId, long friendId, String status) {
+
+    }
+
+
+    @Override
+    public boolean removeFriendById(long userId) {
+        return false;
+    }
+
+    /**
+     * Генерация ID.
+     */
     private long getNextId() {
         long currentMaxId = users.keySet()
                 .stream()
