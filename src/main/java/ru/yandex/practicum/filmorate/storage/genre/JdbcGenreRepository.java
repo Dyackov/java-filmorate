@@ -1,25 +1,20 @@
-package ru.yandex.practicum.filmorate.dal.genre;
+package ru.yandex.practicum.filmorate.storage.genre;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.dal.BaseRepository;
+import ru.yandex.practicum.filmorate.storage.BaseRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 
-import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
-public class GenreRepository extends BaseRepository<Genre> implements GenreStorage {
+public class JdbcGenreRepository extends BaseRepository<Genre> implements GenreStorage {
 
-    public GenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
+    public JdbcGenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper);
     }
 
@@ -36,10 +31,10 @@ public class GenreRepository extends BaseRepository<Genre> implements GenreStora
      * Получение всех жанров конкретного фильма.
      */
     @Override
-    public Set<Genre> getAllGenresByFilmId(long filmId) {
+    public List<Genre> getAllGenresByFilmId(long filmId) {
         log.info("Получение всех жанров фильма из базы данных FilmID: {}.", filmId);
-        return findMany(FIND_All_GENRES_FOR_FILM_QUERY, filmId).stream().sorted(Comparator.comparingLong(Genre::getId))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        return findMany(FIND_All_GENRES_FOR_FILM_QUERY, filmId)/*.stream().sorted(Comparator.comparingLong(Genre::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new))*/;
     }
 
     /**

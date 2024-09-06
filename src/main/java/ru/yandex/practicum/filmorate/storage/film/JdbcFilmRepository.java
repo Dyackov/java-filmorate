@@ -1,32 +1,30 @@
-package ru.yandex.practicum.filmorate.dal.film;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.dal.BaseRepository;
+import ru.yandex.practicum.filmorate.storage.BaseRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.service.GenreService;
-import ru.yandex.practicum.filmorate.service.MpaRaringService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.validator.Validator;
+import ru.yandex.practicum.filmorate.service.genre.GenreServiceImpl;
+import ru.yandex.practicum.filmorate.service.mpa.MpaRatingService;
 
 import java.util.HashSet;
 import java.util.List;
 
 @Repository
 @Slf4j
-public class FilmRepository extends BaseRepository<Film> implements FilmStorage {
-    private final MpaRaringService mpaRaringService;
-    private final GenreService genreService;
+public class JdbcFilmRepository extends BaseRepository<Film> implements FilmStorage {
+    private final MpaRatingService mpaRatingService;
+    private final GenreServiceImpl genreServiceImpl;
 
-    public FilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, MpaRaringService mpaRaringService,
-                          GenreService genreService) {
+    public JdbcFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, MpaRatingService mpaRatingService,
+                              GenreServiceImpl genreServiceImpl) {
         super(jdbc, mapper);
-        this.mpaRaringService = mpaRaringService;
-        this.genreService = genreService;
+        this.mpaRatingService = mpaRatingService;
+        this.genreServiceImpl = genreServiceImpl;
     }
 
     private static final String DELETE_LIKE_BY_FILM_ID_QUERY = "DELETE FROM likes WHERE user_id = ? AND film_id = ?";
@@ -99,8 +97,6 @@ public class FilmRepository extends BaseRepository<Film> implements FilmStorage 
     @Override
     public Film updateFilm(Film newFilm) {
         log.info("Обновление записи фильма в базе данных: {}.", newFilm);
-        getFilmById(newFilm.getId());
-        Validator.validateFilm(newFilm);
         update(UPDATE_FILM_QUERY,
                 newFilm.getName(),
                 newFilm.getDescription(),
@@ -122,7 +118,6 @@ public class FilmRepository extends BaseRepository<Film> implements FilmStorage 
     @Override
     public Film createFilm(Film film) {
         log.info("Создание записи фильма в базе данных: {}.", film);
-        Validator.validateFilm(film);
         long id = insert(CREATE_FILM_QUERY,
                 film.getName(),
                 film.getDescription(),
@@ -175,8 +170,8 @@ public class FilmRepository extends BaseRepository<Film> implements FilmStorage 
      * Присвоение жанра,рейтинга фильму,лайков.
      */
     private void setFilmDetails(Film film) {
-        film.setMpa(mpaRaringService.getMpaById(film.getMpa().getId()));
-        film.setGenres(genreService.getAllGenresForFilm(film.getId()));
+        film.setMpa(mpaRatingService.getMpaById(film.getMpa().getId()));
+        film.setGenres(genreServiceImpl.getAllGenresForFilm(film.getId()));
         film.setIdUserLike(new HashSet<>(findManyFriendsId(FIND_LIKE_QUERY, film.getId())));
     }
 }

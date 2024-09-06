@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.List;
 
@@ -16,65 +16,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final UserService userServiceImpl;
+
+    /**
+     * POST - создание пользователя.
+     */
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@RequestBody @Valid User user) {
+        log.info("Запрос на создание пользователя: \n{}", user);
+        return userServiceImpl.createUser(user);
+    }
+
+    /**
+     * PUT - обновление пользователя.
+     */
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public User updateUser(@RequestBody User user) {
+        log.info("Запрос на обновление пользователя:\n{}", user);
+        return userServiceImpl.updateUser(user);
+    }
 
     /**
      * PUT - добавление в друзья.
      */
     @PutMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
-    public void addFriends(@PathVariable("id") long userId, @PathVariable long friendId) {
-        log.info("Получен запрос на добавление в друзья ID: {}, от пользователя ID {}.", userId, friendId);
-        userService.addFriend(userId, friendId);
-    }
-
-    /**
-     * DELETE - удаление из друзей.
-     */
-    @DeleteMapping("/{userId}/friends/{friendId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void removeFriend(@PathVariable long userId, @PathVariable long friendId) {
-        log.info("Получен запрос на удаление из друзей.");
-        userService.removeFriend(userId, friendId);
-    }
-
-    /**
-     * GET - возвращаем список пользователей, являющихся его друзьями.
-     */
-    @GetMapping("/{id}/friends")
-    public List<User> getFriends(@PathVariable("id") long userId) {
-        log.info("Получен запрос на получение друзей пользователя с ID: {}.", userId);
-        return userService.getFriends(userId);
-    }
-
-    /**
-     * GET - список друзей, общих с другим пользователем.
-     */
-    @GetMapping("/{id}/friends/common/{otherId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable long otherId) {
-        log.info("Получен запрос на получение общих друзей пользователя ID: {}, с пользователем ID: {}.", userId, otherId);
-        return userService.getCommonFriends(userId, otherId);
-    }
-
-    /**
-     * DELETE - удаление всех пользоваетелей.
-     */
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteAllUsers() {
-        log.info("Получен запрос на удаление всех пользователей");
-        userService.deleteAllUsers();
-    }
-
-    /**
-     * DELETE - удаление пользоваетеля по ID.
-     */
-    @DeleteMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteUserById(@PathVariable long userId) {
-        log.info("Получен запрос на удаление пользователя с ID: {}", userId);
-        userService.deleteByIdUser(userId);
+    public void addUserFriend(@PathVariable("id") long userId, @PathVariable long friendId) {
+        log.info("Запрос на добавление в друзья. ID пользователя 1: {}, ID пользователя 2: {}.", userId, friendId);
+        userServiceImpl.addFriend(userId, friendId);
     }
 
     /**
@@ -83,8 +54,8 @@ public class UserController {
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User getUserById(@PathVariable long userId) {
-        log.info("Получен запрос на получение пользователя с ID: {}.", userId);
-        return userService.findUserById(userId);
+        log.info("Запрос на получение пользователя. ID пользователя: {}.", userId);
+        return userServiceImpl.getUserById(userId);
     }
 
     /**
@@ -92,28 +63,58 @@ public class UserController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> findAll() {
-        log.info("Получен запрос на получение всех пользователей.");
-        return userService.findAll();
+    public List<User> getAllUsers() {
+        log.info("Запрос на получение всех пользователей.");
+        return userServiceImpl.getAllUsers();
     }
 
     /**
-     * PUT - обновление пользователя.
+     * GET - возвращаем список пользователей, являющихся его друзьями.
      */
-    @PutMapping
+    @GetMapping("/{id}/friends")
+    public List<User> getUserFriends(@PathVariable("id") long userId) {
+        log.info("Запрос на получение друзей пользователя. ID пользователя: {}.", userId);
+        return userServiceImpl.getUserFriends(userId);
+    }
+
+    /**
+     * GET - список друзей, общих с другим пользователем.
+     */
+    @GetMapping("/{id}/friends/common/{otherId}")
     @ResponseStatus(HttpStatus.OK)
-    public User update(@Valid @RequestBody User newUser) {
-        log.info("Получен запрос на обновление пользователя {}.", newUser);
-        return userService.update(newUser);
+    public List<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable long otherId) {
+        log.info("Запрос на получение общих друзей пользователя ID: {}, с пользователем ID: {}.", userId, otherId);
+        return userServiceImpl.getCommonFriends(userId, otherId);
     }
 
     /**
-     * POST - создание пользователя.
+     * DELETE - удаление из друзей.
      */
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public User create(@Valid @RequestBody User user) {
-        log.info("Получен запрос на создание пользователя {}.", user);
-        return userService.create(user);
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeFriend(@PathVariable long userId, @PathVariable long friendId) {
+        log.info("Запрос на удаление из друзей. ID пользователя 1: {}, ID пользователя 2: {}.", userId, friendId);
+        userServiceImpl.removeFriend(userId, friendId);
     }
+
+    /**
+     * DELETE - удаление пользоваетеля по ID.
+     */
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUserById(@PathVariable long userId) {
+        log.info("Запрос на удаление пользователя с ID: {}", userId);
+        userServiceImpl.deleteUserById(userId);
+    }
+
+    /**
+     * DELETE - удаление всех пользоваетелей.
+     */
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAllUsers() {
+        log.info("Запрос на удаление всех пользователей");
+        userServiceImpl.deleteAllUsers();
+    }
+
 }

@@ -49,6 +49,12 @@ public class InMemoryUserStorage implements UserStorage {
         return newUser;
     }
 
+    @Override
+    public void addFriend(long userId, long friendId, String status) {
+
+    }
+
+
     /**
      * Получение всех пользователей.
      */
@@ -75,9 +81,8 @@ public class InMemoryUserStorage implements UserStorage {
      * Удаление всех пользователей.
      */
     @Override
-    public boolean removeAllUsers() {
+    public void deleteAllUsers() {
         users.clear();
-        return true;
     }
 
     @Override
@@ -95,15 +100,15 @@ public class InMemoryUserStorage implements UserStorage {
         return List.of();
     }
 
+//    @Override
+//    public void addFriend(long userId, long friendId, String status) {
+//
+//    }
+
+
     @Override
-    public void addFriend(long userId, long friendId, String status) {
+    public void deleteUserById(long userId) {
 
-    }
-
-
-    @Override
-    public boolean removeFriendById(long userId) {
-        return false;
     }
 
     /**
