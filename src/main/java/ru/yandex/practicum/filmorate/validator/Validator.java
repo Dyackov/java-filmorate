@@ -18,7 +18,6 @@ import java.util.List;
 @Slf4j
 @Component
 public class Validator {
-    private static ApplicationContext context;
     private static final LocalDate DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
     private static final int ZERO = 0;
 
