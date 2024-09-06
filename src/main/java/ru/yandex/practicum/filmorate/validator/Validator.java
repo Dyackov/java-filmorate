@@ -2,9 +2,7 @@ package ru.yandex.practicum.filmorate.validator;
 
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -19,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class Validator implements ApplicationContextAware {
+public class Validator {
     private static ApplicationContext context;
     private static final LocalDate DATE_OF_RELEASE = LocalDate.of(1895, 12, 28);
     private static final int ZERO = 0;
@@ -77,10 +75,5 @@ public class Validator implements ApplicationContextAware {
             user.setName(user.getLogin());
             log.debug("Указали пустое поле имени, будет использован логин - {} .", user.getLogin());
         }
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        context = applicationContext;
     }
 }
