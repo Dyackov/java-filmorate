@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.service.MpaRaringService;
+import ru.yandex.practicum.filmorate.service.mpa.MpaRatingService;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MpaRatingController {
 
-    private final MpaRaringService mpaRaringService;
+    private final MpaRatingService mpaRatingService;
 
     /**
      * GET - получение рейтинга по ID.
@@ -23,8 +23,8 @@ public class MpaRatingController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Mpa getMpaById(@PathVariable int id) {
-        log.info("Получен запрос на получение реутинга по ID: {}.", id);
-        return mpaRaringService.getMpaById(id);
+        log.info("Запрос на получение рейтинга по ID: {}.", id);
+        return mpaRatingService.getMpaById(id);
     }
 
     /**
@@ -33,7 +33,7 @@ public class MpaRatingController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Mpa> findAll() {
-        log.info("Получен запрос на получение всех рейтингов.");
-        return mpaRaringService.getAll();
+        log.info("Запрос на получение всех рейтингов.");
+        return mpaRatingService.getAll();
     }
 }

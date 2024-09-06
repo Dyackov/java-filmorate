@@ -20,7 +20,7 @@ public class User {
     private Long id;
     @Email(message = "Электронная почта должна содержать символ @.")
     @NotNull(message = "Электронная почта не может быть пустой.")
-    @NotBlank(message = "Электронная почта не может быть пустой.")
+    @NotBlank(message = "Электронная почта не может содержать пробелы.")
     private String email;
     @NotNull(message = "Логин не может быть пустым.")
     @NotBlank(message = "Логин не может содержать пробелы.")

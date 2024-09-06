@@ -3,7 +3,7 @@ Template repository for Filmorate project.
 
 # Схема базы данных 
 ***
-![text](erDiargam.png)
+![text](erDiargam_V2.png)
 ***
 
 ## Описание схемы базы данных

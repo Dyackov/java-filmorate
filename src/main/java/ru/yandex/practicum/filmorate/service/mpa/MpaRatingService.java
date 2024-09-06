@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.mpa;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,16 +11,18 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MpaRaringService {
-    private final MpaRatingStorage mpaRatingRepository;
+public class MpaRatingService implements MpaRating {
+    private final MpaRatingStorage jdbcMpaRatingRepository;
 
 
+    @Override
     public List<Mpa> getAll() {
-        return mpaRatingRepository.getAllMpas();
+        return jdbcMpaRatingRepository.getAllMpas();
     }
 
+    @Override
     public Mpa getMpaById(int id) {
-        return mpaRatingRepository.getMpaById(id);
+        return jdbcMpaRatingRepository.getMpaById(id);
     }
 
 }
