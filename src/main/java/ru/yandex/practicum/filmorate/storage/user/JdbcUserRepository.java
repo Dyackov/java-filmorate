@@ -30,7 +30,6 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserStor
             WHERE user_id = ?
             """;
     private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM users WHERE user_id = ?";
- //   private static final String ADD_FRIEND_QUERY = "INSERT INTO friends (user_id,friend_id,status) VALUES (?,?,?)";
     private static final String ADD_FRIEND_QUERY = "INSERT INTO friends (user_id,friend_id,status) VALUES (?,?,?)";
     private static final String DELETE_FRIEND_QUERY = "DELETE FROM friends WHERE user_id = ? AND friend_id = ?";
 
@@ -87,15 +86,6 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserStor
         return user;
     }
 
-//    /**
-//     * Добавление в друзья.
-//     */
-//    @Override
-//    public void addFriend(long userId, long friendId, String status) {
-//        log.info("Добавление записи о дружбе в базу данных , UserID: {} , добавляет FriendID: {}.", userId, friendId);
-//        add(ADD_FRIEND_QUERY, userId, friendId, status);
-//        log.info("Добавлена запись о дружбе в базу данных , UserID: {} , добавил FriendID: {}.", userId, friendId);
-//    }
     /**
      * Добавление в друзья.
      */

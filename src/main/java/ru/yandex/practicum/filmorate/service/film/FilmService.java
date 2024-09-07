@@ -34,7 +34,7 @@ public interface FilmService {
     /**
      * Удаление фильма по ID.
      */
-    void deleteFilmById(long id);
+    void deleteFilmById(long filmId);
 
     /**
      * Удаление всех фильмов.

@@ -20,6 +20,27 @@ public class FilmController {
     private final FilmService filmServiceImpl;
 
     /**
+     * DELETE - удаление фильма по идентификатору.
+     */
+    @DeleteMapping("/{filmId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFilmById(@PathVariable long filmId) {
+        log.info("Запрос на удаление фильма. ID фильма:{}.",filmId);
+        filmServiceImpl.deleteFilmById(filmId);
+    }
+
+    /**
+     * DELETE - удаление всех фильмов.
+     */
+    @DeleteMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAllFilms() {
+        log.info("Запрос на удаление всех фильмов.");
+        filmServiceImpl.deleteAllFilms();
+    }
+
+
+    /**
      * GET - вывод общих с другом фильмов с сортировкой по их популярности.
      */
     @GetMapping("/common")
