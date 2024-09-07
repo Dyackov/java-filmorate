@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import java.util.List;
 
@@ -17,16 +17,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmController {
 
-    private final FilmService filmService;
+    private final FilmService filmServiceImpl;
+
+    /**
+     * GET - вывод общих с другом фильмов с сортировкой по их популярности.
+     */
+    @GetMapping("/common")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getCommonFilms(@RequestParam long userId, @RequestParam long friendId) {
+        log.info("Запрос на список общих фильмов. ID пользователя1:{} , ID пользователя2:{} ", userId, friendId);
+        return filmServiceImpl.getCommonFilms(userId,friendId);
+    }
+
 
     /**
      * PUT - пользователь ставит лайк фильму.
      */
     @PutMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void addLikeToFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
-        log.info("Получен запрос на добавление лайка фильму с ID: {} , от пользователя c ID: {}.", filmId, userId);
-        filmService.addLikeToFilm(filmId, userId);
+    public void addLikeToFilm(@PathVariable("id") long filmId, @PathVariable("userId") long userId) {
+        log.info("Запрос на добавление лайка фильму с ID: {} , от пользователя c ID: {}.", filmId, userId);
+        filmServiceImpl.addLikeToFilm(filmId, userId);
     }
 
     /**
@@ -35,8 +46,8 @@ public class FilmController {
     @DeleteMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void removeLikeFromFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
-        log.info("Получен запрос на удаление лайка.");
-        filmService.removeLikeFromFilm(filmId, userId);
+        log.info("Запрос на удаление лайка.");
+        filmServiceImpl.removeLikeFromFilm(filmId, userId);
     }
 
     /**
@@ -46,8 +57,8 @@ public class FilmController {
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
     public List<Film> getPopularFilms(@RequestParam(required = false) @Positive Integer count) {
-        log.info("Получен запрос на получение популярных фильмов.");
-        return filmService.getPopularFilms(count);
+        log.info("Запрос на получение популярных фильмов.");
+        return filmServiceImpl.getPopularFilms(count);
     }
 
     /**
@@ -56,8 +67,8 @@ public class FilmController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film createFilm(@Valid @RequestBody Film film) {
-        log.info("Получен запрос на создание фильма {}.", film);
-        return filmService.createFilm(film);
+        log.info("Запрос на создание фильма {}", film);
+        return filmServiceImpl.createFilm(film);
     }
 
     /**
@@ -65,9 +76,9 @@ public class FilmController {
      */
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Film updateFilm(@Valid @RequestBody Film newFilm) {
-        log.info("Получен запрос на обновление фильма {}.", newFilm);
-        return filmService.updateFilm(newFilm);
+    public Film updateFilm(@RequestBody Film newFilm) {
+        log.info("Запрос на обновление фильма {}", newFilm);
+        return filmServiceImpl.updateFilm(newFilm);
     }
 
     /**
@@ -75,9 +86,9 @@ public class FilmController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Film> findAllFilms() {
-        log.info("Получен запрос на получение всех фильмов.");
-        return filmService.findAllFilms();
+    public List<Film> getAllFilms() {
+        log.info("Запрос на получение всех фильмов.");
+        return filmServiceImpl.getAllFilms();
     }
 
     /**
@@ -86,7 +97,7 @@ public class FilmController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Film getFilmById(@PathVariable long id) {
-        log.info("Получен запрос на получение фильма по ID: {}.", id);
-        return filmService.getFilmById(id);
+        log.info("Запрос на получение фильма по ID: {}.", id);
+        return filmServiceImpl.getFilmById(id);
     }
 }

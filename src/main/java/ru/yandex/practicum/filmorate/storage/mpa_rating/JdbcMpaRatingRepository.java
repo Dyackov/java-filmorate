@@ -1,21 +1,20 @@
-package ru.yandex.practicum.filmorate.dal.mpa_rating;
+package ru.yandex.practicum.filmorate.storage.mpa_rating;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.dal.BaseRepository;
+import ru.yandex.practicum.filmorate.storage.BaseRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.mpa_rating.MpaRatingStorage;
 
 import java.util.List;
 
 @Slf4j
 @Repository
-public class MpaRatingRepository extends BaseRepository<Mpa> implements MpaRatingStorage {
+public class JdbcMpaRatingRepository extends BaseRepository<Mpa> implements MpaRatingStorage {
 
-    public MpaRatingRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
+    public JdbcMpaRatingRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper);
     }
 

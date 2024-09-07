@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.service.GenreService;
+import ru.yandex.practicum.filmorate.service.genre.GenreService;
 
 import java.util.List;
 
@@ -14,8 +14,7 @@ import java.util.List;
 @RequestMapping("/genres")
 @RequiredArgsConstructor
 public class GenreController {
-
-    private final GenreService genreService;
+    private final GenreService genreServiceImpl;
 
     /**
      * GET - получение жанра по ID.
@@ -23,8 +22,8 @@ public class GenreController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Genre getGenreById(@PathVariable int id) {
-        log.info("Получен запрос на получение жанра по ID: {}.", id);
-        return genreService.getGenreById(id);
+        log.info("Запрос на получение жанра по ID: {}.", id);
+        return genreServiceImpl.getGenreById(id);
     }
 
     /**
@@ -33,7 +32,7 @@ public class GenreController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Genre> findAll() {
-        log.info("Получен запрос на получение всех жанров.");
-        return genreService.getAllGenres();
+        log.info("Запрос на получение всех жанров.");
+        return genreServiceImpl.getAllGenres();
     }
 }

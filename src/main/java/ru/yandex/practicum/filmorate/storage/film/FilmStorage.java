@@ -5,6 +5,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.List;
 
 public interface FilmStorage {
+    /**
+     * Вывод общих с другом фильмов с сортировкой по их популярности.
+     */
+    List<Film> getCommonFilms(long userId, long friendId);
 
     void removeLikeFromFilm(long filmId, long userId);
 
