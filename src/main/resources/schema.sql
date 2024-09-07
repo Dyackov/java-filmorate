@@ -1,64 +1,54 @@
-drop table if exists users,friends,mpa_rating,films,likes,genres,films_genres;
+DROP TABLE IF EXISTS USERS, FRIENDS, MPA_RATING, FILMS, LIKES, GENRES, FILMS_GENRES;
 
-create table if not exists users
+CREATE TABLE IF NOT EXISTS USERS
 (
-    user_id  bigint primary key auto_increment,
-    email    varchar not null,
-    login    varchar not null,
-    name     varchar,
-    birthday date
+    USER_ID  BIGINT PRIMARY KEY AUTO_INCREMENT,
+    EMAIL    VARCHAR NOT NULL,
+    LOGIN    VARCHAR NOT NULL,
+    NAME     VARCHAR,
+    BIRTHDAY DATE
 );
 
-create table if not exists friends
+CREATE TABLE IF NOT EXISTS FRIENDS
 (
-    user_id  bigint references users (user_id) on delete cascade,
-    friend_id bigint references users (user_id) on delete cascade,
-    status    enum ('confirmed','unconfirmed') default 'unconfirmed',
-    CONSTRAINT friends UNIQUE (user_id, friend_id)
+    USER_ID  BIGINT REFERENCES USERS (USER_ID) ON DELETE CASCADE,
+    FRIEND_ID BIGINT REFERENCES USERS (USER_ID) ON DELETE CASCADE,
+    STATUS    ENUM ('CONFIRMED','UNCONFIRMED') DEFAULT 'UNCONFIRMED',
+    CONSTRAINT FRIENDS UNIQUE (USER_ID, FRIEND_ID)
 );
 
-create table if not exists mpa_rating
+CREATE TABLE IF NOT EXISTS MPA_RATING
 (
-    rating_id   int primary key,
-    rating_code varchar
+    RATING_ID   INT PRIMARY KEY,
+    RATING_CODE VARCHAR
 );
 
-create table if not exists films
+CREATE TABLE IF NOT EXISTS FILMS
 (
-    film_id      bigint primary key auto_increment,
-    name         varchar not null,
-    description  varchar(200),
-    release_date date,
-    duration     int,
-    rating_id    int references mpa_rating (rating_id)
+    FILM_ID      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    NAME         VARCHAR NOT NULL,
+    DESCRIPTION  VARCHAR(200),
+    RELEASE_DATE DATE,
+    DURATION     INT,
+    RATING_ID    INT REFERENCES MPA_RATING (RATING_ID)
 );
 
-create table if not exists likes
+CREATE TABLE IF NOT EXISTS LIKES
 (
-    user_id bigint references users (user_id) on delete cascade,
-    film_id bigint references films (film_id) on delete cascade,
-    CONSTRAINT likes UNIQUE (user_id, film_id)
+    USER_ID BIGINT REFERENCES USERS (USER_ID) ON DELETE CASCADE,
+    FILM_ID BIGINT REFERENCES FILMS (FILM_ID) ON DELETE CASCADE,
+    CONSTRAINT LIKES UNIQUE (USER_ID, FILM_ID)
 );
 
-create table if not exists genres
+CREATE TABLE IF NOT EXISTS GENRES
 (
-    genre_id int primary key,
-    name     varchar not null
+    GENRE_ID INT PRIMARY KEY,
+    NAME     VARCHAR NOT NULL
 );
 
-create table if not exists films_genres
+CREATE TABLE IF NOT EXISTS FILMS_GENRES
 (
-    film_id  bigint references films (film_id),
-    genre_id bigint references genres (genre_id),
-    CONSTRAINT films_genres UNIQUE (film_id, genre_id)
+    FILM_ID  BIGINT REFERENCES FILMS (FILM_ID) ON DELETE CASCADE,
+    GENRE_ID BIGINT REFERENCES GENRES (GENRE_ID),
+    CONSTRAINT FILMS_GENRES UNIQUE (FILM_ID, GENRE_ID)
 );
-
-
-
-
-
-
-
-
-
-
