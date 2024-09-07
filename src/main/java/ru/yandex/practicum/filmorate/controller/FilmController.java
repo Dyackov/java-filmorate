@@ -20,12 +20,23 @@ public class FilmController {
     private final FilmService filmServiceImpl;
 
     /**
+     * GET - вывод общих с другом фильмов с сортировкой по их популярности.
+     */
+    @GetMapping("/common")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getCommonFilms(@RequestParam long userId, @RequestParam long friendId) {
+        log.info("Запрос на список общих фильмов. ID пользователя1:{} , ID пользователя2:{} ", userId, friendId);
+        return filmServiceImpl.getCommonFilms(userId,friendId);
+    }
+
+
+    /**
      * PUT - пользователь ставит лайк фильму.
      */
     @PutMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void addLikeToFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
-        log.info("Получен запрос на добавление лайка фильму с ID: {} , от пользователя c ID: {}.", filmId, userId);
+    public void addLikeToFilm(@PathVariable("id") long filmId, @PathVariable("userId") long userId) {
+        log.info("Запрос на добавление лайка фильму с ID: {} , от пользователя c ID: {}.", filmId, userId);
         filmServiceImpl.addLikeToFilm(filmId, userId);
     }
 
@@ -35,7 +46,7 @@ public class FilmController {
     @DeleteMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void removeLikeFromFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
-        log.info("Получен запрос на удаление лайка.");
+        log.info("Запрос на удаление лайка.");
         filmServiceImpl.removeLikeFromFilm(filmId, userId);
     }
 
@@ -46,7 +57,7 @@ public class FilmController {
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
     public List<Film> getPopularFilms(@RequestParam(required = false) @Positive Integer count) {
-        log.info("Получен запрос на получение популярных фильмов.");
+        log.info("Запрос на получение популярных фильмов.");
         return filmServiceImpl.getPopularFilms(count);
     }
 

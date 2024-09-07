@@ -68,6 +68,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         return new ArrayList<>(films.values());
     }
 
+    @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        return List.of();
+    }
+
     /**
      * Удаление лайка.
      */

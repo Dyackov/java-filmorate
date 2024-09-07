@@ -7,6 +7,11 @@ import java.util.List;
 public interface FilmService {
 
     /**
+     * Вывод общих с другом фильмов с сортировкой по их популярности.
+     */
+     List<Film> getCommonFilms(long userId, long friendId);
+
+    /**
      * Создание фильма.
      */
     Film createFilm(Film film);

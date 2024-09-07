@@ -24,6 +24,13 @@ public class FilmServiceImpl implements FilmService {
         this.userServiceImpl = userServiceImpl;
     }
 
+    @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        userServiceImpl.getUserById(userId);
+        userServiceImpl.getUserById(friendId);
+        return jdbcFilmRepository.getCommonFilms(userId,friendId);
+    }
+
     /**
      * Создание фильма.
      */

@@ -4,12 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.storage.BaseRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.genre.GenreServiceImpl;
 import ru.yandex.practicum.filmorate.service.mpa.MpaRatingService;
+import ru.yandex.practicum.filmorate.storage.BaseRepository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -50,6 +50,26 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmStor
             INSERT INTO films_genres (film_id,genre_id)
             VALUES (?,?)
             """;
+
+    private static final String GET_COMMON_FILMS_QUERY = """
+            SELECT f.*, COUNT (l.user_id) AS popularity
+            FROM films f
+            JOIN likes l ON f.film_id = l.film_id
+            WHERE l.user_id IN (? , ?)
+            GROUP BY f.film_id , f.name
+            HAVING COUNT(DISTINCT l.user_id) = 2
+            ORDER BY popularity DESC;
+            """;
+
+
+    @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        log.info("Получение общих фильмов из базы данных.");
+        List<Film> films = findMany(GET_COMMON_FILMS_QUERY, userId,friendId);
+        films.forEach(this::setFilmDetails);
+        return films;
+
+    }
 
     /**
      * Удаление лайка.
