@@ -70,8 +70,9 @@ public class FilmServiceImpl implements FilmService {
      * Удаление фильма по ID.
      */
     @Override
-    public void deleteFilmById(long id) {
-
+    public void deleteFilmById(long filmId) {
+        getFilmById(filmId);
+        jdbcFilmRepository.deleteFilmById(filmId);
     }
 
     /**
@@ -79,6 +80,7 @@ public class FilmServiceImpl implements FilmService {
      */
     @Override
     public void deleteAllFilms() {
+        jdbcFilmRepository.deleteAllFilms();
     }
 
     /**

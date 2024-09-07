@@ -28,8 +28,8 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmStor
     }
 
     private static final String DELETE_LIKE_BY_FILM_ID_QUERY = "DELETE FROM likes WHERE user_id = ? AND film_id = ?";
-    private static final String DELETE_ALL_FILMS_QUERY = "DELETE FROM users";
-    private static final String DELETE_BY_ID_FILM_QUERY = "DELETE FROM users WHERE user_id = ?";
+    private static final String DELETE_ALL_FILMS_QUERY = "DELETE FROM films";
+    private static final String DELETE_BY_ID_FILM_QUERY = "DELETE FROM films WHERE film_id = ?";
     private static final String FIND_FILM_BY_ID_QUERY = "SELECT * FROM films WHERE film_id=?";
     private static final String FIND_ALL_FILM_QUERY = "SELECT * FROM films";
     private static final String FIND_LIKE_QUERY = "SELECT user_id FROM likes WHERE film_id = ?";
@@ -104,11 +104,10 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmStor
      * Удаление фильма по ID.
      */
     @Override
-    public void deleteFilmById(long id) {
-        log.info("Удаление фильма из базы данных ID: {}.", id);
-        getFilmById(id);
-        delete(DELETE_BY_ID_FILM_QUERY, id);
-        log.info("Удалён фильм из базы данных ID: {}.", id);
+    public void deleteFilmById(long filmId) {
+        log.info("Удаление фильма из базы данных ID: {}.", filmId);
+        delete(DELETE_BY_ID_FILM_QUERY, filmId);
+        log.info("Удалён фильм из базы данных ID: {}.", filmId);
     }
 
     /**
