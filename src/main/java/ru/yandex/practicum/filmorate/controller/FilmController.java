@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,12 +19,25 @@ public class FilmController {
     private final FilmService filmServiceImpl;
 
     /**
+     * GET — возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано,
+     * возвращает первые 10.
+     */
+    @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getPopularFilms(@RequestParam(required = false, defaultValue = "10") long count,
+                                      @RequestParam(required = false) Integer genreId,
+                                      @RequestParam(required = false) Integer year) {
+        log.info("Запрос на получение популярных фильмов по лайкам. count: {}, genreId: {}, year: {}", count, genreId, year);
+        return filmServiceImpl.getPopularFilms(count, genreId, year);
+    }
+
+    /**
      * DELETE - удаление фильма по идентификатору.
      */
     @DeleteMapping("/{filmId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFilmById(@PathVariable long filmId) {
-        log.info("Запрос на удаление фильма. ID фильма:{}.",filmId);
+        log.info("Запрос на удаление фильма. ID фильма:{}.", filmId);
         filmServiceImpl.deleteFilmById(filmId);
     }
 
@@ -47,7 +59,7 @@ public class FilmController {
     @ResponseStatus(HttpStatus.OK)
     public List<Film> getCommonFilms(@RequestParam long userId, @RequestParam long friendId) {
         log.info("Запрос на список общих фильмов. ID пользователя1:{} , ID пользователя2:{} ", userId, friendId);
-        return filmServiceImpl.getCommonFilms(userId,friendId);
+        return filmServiceImpl.getCommonFilms(userId, friendId);
     }
 
 
@@ -69,17 +81,6 @@ public class FilmController {
     public void removeLikeFromFilm(@PathVariable("id") long filmId, @PathVariable long userId) {
         log.info("Запрос на удаление лайка.");
         filmServiceImpl.removeLikeFromFilm(filmId, userId);
-    }
-
-    /**
-     * GET — возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано,
-     * возвращает первые 10.
-     */
-    @GetMapping("/popular")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Film> getPopularFilms(@RequestParam(required = false) @Positive Integer count) {
-        log.info("Запрос на получение популярных фильмов.");
-        return filmServiceImpl.getPopularFilms(count);
     }
 
     /**

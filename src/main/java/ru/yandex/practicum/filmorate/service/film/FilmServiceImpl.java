@@ -9,14 +9,12 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.validator.Validator;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage jdbcFilmRepository;
     private final UserServiceImpl userServiceImpl;
-    private static final int DEFAULT_POPULAR_FILMS_COUNT = 10;
 
     @Autowired
     public FilmServiceImpl(FilmStorage jdbcFilmRepository, UserServiceImpl userServiceImpl) {
@@ -24,11 +22,27 @@ public class FilmServiceImpl implements FilmService {
         this.userServiceImpl = userServiceImpl;
     }
 
+    /**
+     * Получение популярных фильмов.
+     */
+    @Override
+    public List<Film> getPopularFilms(long count, Integer genreId, Integer year) {
+/*//        Optional<Long> limitCount = Optional.ofNullable(count);
+//        return getAllFilms().stream()
+//                .sorted((f1, f2) -> Integer.compare(f2.getIdUserLike().size(), f1.getIdUserLike().size()))
+//                .filter(film -> genreId == null || film.getGenres().contains(genreServiceImpl.getGenreById(genreId)))
+//                .filter(film -> year == null || film.getReleaseDate().getYear() == year)
+//                .limit(limitCount.orElse(DEFAULT_POPULAR_FILMS_COUNT))
+//                .peek(film -> log.info("film - {}", film))
+//                .toList();*/
+        return jdbcFilmRepository.getPopularFilms(genreId, year).stream().limit(count).toList();
+    }
+
     @Override
     public List<Film> getCommonFilms(long userId, long friendId) {
         userServiceImpl.getUserById(userId);
         userServiceImpl.getUserById(friendId);
-        return jdbcFilmRepository.getCommonFilms(userId,friendId);
+        return jdbcFilmRepository.getCommonFilms(userId, friendId);
     }
 
     /**
@@ -101,16 +115,16 @@ public class FilmServiceImpl implements FilmService {
         jdbcFilmRepository.removeLikeFromFilm(filmId, userId);
     }
 
-    /**
-     * Получение популярных фильмов.
-     */
-    @Override
-    public List<Film> getPopularFilms(Integer count) {
-        Optional<Integer> optionalCount = Optional.ofNullable(count);
-        log.info("Получение популярных фильмов.");
-        return jdbcFilmRepository.getAllFilms().stream()
-                .sorted((film1, film2) -> Integer.compare(film2.getIdUserLike().size(), film1.getIdUserLike().size()))
-                .limit(optionalCount.orElse(DEFAULT_POPULAR_FILMS_COUNT))
-                .toList();
-    }
+//    /**
+//     * Получение популярных фильмов.
+//     */
+//    @Override
+//    public List<Film> getPopularFilms(Integer count) {
+////        Optional<Long> optionalCount = Optional.ofNullable(count);
+//        log.info("Получение популярных фильмов.");
+//        return jdbcFilmRepository.getAllFilms().stream()
+//                .sorted((film1, film2) -> Integer.compare(film2.getIdUserLike().size(), film1.getIdUserLike().size()))
+////                .limit(optionalCount.orElse(DEFAULT_POPULAR_FILMS_COUNT))
+//                .toList();
+//    }
 }
