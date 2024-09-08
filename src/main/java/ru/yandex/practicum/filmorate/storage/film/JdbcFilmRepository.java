@@ -62,13 +62,55 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmStor
             """;
 
 
+    private static final String GET_POPULAR_FILMS_QUERY = """
+            SELECT f.*, COUNT(l.user_id) AS popularity
+            FROM films f
+            LEFT JOIN likes l ON f.film_id = l.film_id
+            LEFT JOIN films_genres fg ON f.film_id = fg.film_id
+            WHERE (? IS NULL OR fg.genre_id = ?)
+            AND (? IS NULL OR YEAR(f.release_date) = ?)
+            GROUP BY f.film_id
+            ORDER BY popularity DESC
+            """;
+//    private static final String GET_POPULAR_FILMS_QUERY = """
+//            SELECT f.*, COUNT(l.user_id) AS popularity
+//            FROM films f
+//            JOIN likes l ON f.film_id = l.film_id
+//            JOIN films_genres g ON f.film_id = g.film_id
+//            WHERE g.genre_id = COALESCE(?, g.genre_id)
+//            AND (YEAR(f.release_date) = COALESCE(?, YEAR(f.release_date)))
+//            GROUP BY f.film_id
+//            ORDER BY popularity DESC
+//            """;
+
+//    private static final String GET_POPULAR_FILMS_QUERY = """
+//            SELECT f.*, COUNT(l.user_id) AS popularity
+//            FROM films f
+//            LEFT JOIN likes l ON f.film_id = l.film_id
+//            LEFT JOIN films_genres fg ON f.film_id = fg.film_id
+//            WHERE (:genreId IS NULL OR fg.genre_id = :genreId) AND (:year IS NULL OR YEAR(f.release_date) = :year)
+//            GROUP BY f.film_id
+//            ORDER BY popularity DESC
+//            """;
+
+    /**
+     * Возвращает список самых популярных фильмов указанного жанра за нужный год.
+     */
+    @Override
+    public List<Film> getPopularFilms(Integer genreId, Integer year) {
+        log.info("Получение популярных фильмов из базы данных. ЖанрID: {}, год: {}.", genreId, year);
+        return findMany(GET_POPULAR_FILMS_QUERY, genreId, genreId, year, year);
+    }
+
+    /**
+     * GET - вывод общих с другом фильмов с сортировкой по их популярности.
+     */
     @Override
     public List<Film> getCommonFilms(long userId, long friendId) {
         log.info("Получение общих фильмов из базы данных.");
-        List<Film> films = findMany(GET_COMMON_FILMS_QUERY, userId,friendId);
+        List<Film> films = findMany(GET_COMMON_FILMS_QUERY, userId, friendId);
         films.forEach(this::setFilmDetails);
         return films;
-
     }
 
     /**

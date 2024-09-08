@@ -7,6 +7,11 @@ import java.util.List;
 public interface FilmService {
 
     /**
+     * Получение популярных фильмов.
+     */
+    List<Film> getPopularFilms(long limit, Integer genreId, Integer year);
+
+    /**
      * Вывод общих с другом фильмов с сортировкой по их популярности.
      */
      List<Film> getCommonFilms(long userId, long friendId);
@@ -51,9 +56,7 @@ public interface FilmService {
      */
     void removeLikeFromFilm(long filmId, long userId);
 
-    /**
-     * Получение популярных фильмов.
-     */
-    List<Film> getPopularFilms(Integer count);
+
+
 
 }

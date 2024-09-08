@@ -5,6 +5,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.List;
 
 public interface FilmStorage {
+
+    List<Film> getPopularFilms(Integer genreId, Integer year);
+
     /**
      * Вывод общих с другом фильмов с сортировкой по их популярности.
      */
