@@ -61,7 +61,6 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmStor
             ORDER BY popularity DESC;
             """;
 
-
     private static final String GET_POPULAR_FILMS_QUERY = """
             SELECT f.*, COUNT(l.user_id) AS popularity
             FROM films f
@@ -72,26 +71,6 @@ public class JdbcFilmRepository extends BaseRepository<Film> implements FilmStor
             GROUP BY f.film_id
             ORDER BY popularity DESC
             """;
-//    private static final String GET_POPULAR_FILMS_QUERY = """
-//            SELECT f.*, COUNT(l.user_id) AS popularity
-//            FROM films f
-//            JOIN likes l ON f.film_id = l.film_id
-//            JOIN films_genres g ON f.film_id = g.film_id
-//            WHERE g.genre_id = COALESCE(?, g.genre_id)
-//            AND (YEAR(f.release_date) = COALESCE(?, YEAR(f.release_date)))
-//            GROUP BY f.film_id
-//            ORDER BY popularity DESC
-//            """;
-
-//    private static final String GET_POPULAR_FILMS_QUERY = """
-//            SELECT f.*, COUNT(l.user_id) AS popularity
-//            FROM films f
-//            LEFT JOIN likes l ON f.film_id = l.film_id
-//            LEFT JOIN films_genres fg ON f.film_id = fg.film_id
-//            WHERE (:genreId IS NULL OR fg.genre_id = :genreId) AND (:year IS NULL OR YEAR(f.release_date) = :year)
-//            GROUP BY f.film_id
-//            ORDER BY popularity DESC
-//            """;
 
     /**
      * Возвращает список самых популярных фильмов указанного жанра за нужный год.

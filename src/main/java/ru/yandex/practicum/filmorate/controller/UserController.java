@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.List;
@@ -17,6 +19,15 @@ import java.util.List;
 public class UserController {
 
     private final UserService userServiceImpl;
+    private  final EventServiceImpl eventServiceImpl;
+
+    @GetMapping("{id}/feed")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Event> getUserFeed(@PathVariable long id){
+        log.info("Запрос на получение ленты событий. ID пользователя: {}.", id);
+        return eventServiceImpl.getEvenByUserId(id);
+    }
+
 
     /**
      * POST - создание пользователя.

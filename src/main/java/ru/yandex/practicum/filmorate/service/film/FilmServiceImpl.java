@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.enums.EventType;
+import ru.yandex.practicum.filmorate.model.enums.Operation;
+import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.validator.Validator;
@@ -15,11 +18,13 @@ import java.util.List;
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage jdbcFilmRepository;
     private final UserServiceImpl userServiceImpl;
+    private final EventServiceImpl eventServiceImpl;
 
     @Autowired
-    public FilmServiceImpl(FilmStorage jdbcFilmRepository, UserServiceImpl userServiceImpl) {
+    public FilmServiceImpl(FilmStorage jdbcFilmRepository, UserServiceImpl userServiceImpl, EventServiceImpl eventServiceImpl) {
         this.jdbcFilmRepository = jdbcFilmRepository;
         this.userServiceImpl = userServiceImpl;
+        this.eventServiceImpl = eventServiceImpl;
     }
 
     /**
@@ -102,6 +107,7 @@ public class FilmServiceImpl implements FilmService {
      */
     @Override
     public void addLikeToFilm(long filmId, long userId) {
+        eventServiceImpl.createEvent(userId, EventType.LIKE, Operation.ADD,filmId);
         jdbcFilmRepository.addLikeToFilm(filmId, userId);
     }
 
@@ -113,6 +119,7 @@ public class FilmServiceImpl implements FilmService {
         jdbcFilmRepository.getFilmById(filmId);
         userServiceImpl.getUserById(userId);
         jdbcFilmRepository.removeLikeFromFilm(filmId, userId);
+        eventServiceImpl.createEvent(userId, EventType.LIKE, Operation.REMOVE,filmId);
     }
 
 //    /**
