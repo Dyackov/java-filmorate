@@ -3,6 +3,9 @@ package ru.yandex.practicum.filmorate.service.review;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.model.enums.EventType;
+import ru.yandex.practicum.filmorate.model.enums.Operation;
+import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.film.FilmServiceImpl;
 import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
@@ -15,11 +18,13 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage jdbcReviewStorage;
     private final UserServiceImpl userServiceImpl;
     private final FilmServiceImpl filmServiceImpl;
+    private final EventServiceImpl eventServiceImpl;
 
-    public ReviewServiceImpl(ReviewStorage jdbcReviewStorage, UserServiceImpl userServiceImpl, FilmServiceImpl filmServiceImpl) {
+    public ReviewServiceImpl(ReviewStorage jdbcReviewStorage, UserServiceImpl userServiceImpl, FilmServiceImpl filmServiceImpl, EventServiceImpl eventServiceImpl) {
         this.jdbcReviewStorage = jdbcReviewStorage;
         this.userServiceImpl = userServiceImpl;
         this.filmServiceImpl = filmServiceImpl;
+        this.eventServiceImpl = eventServiceImpl;
     }
 
     @Override
@@ -31,6 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
         filmServiceImpl.getFilmById(review.getFilmId());
         review.setUseful(0);
         Review createReview = jdbcReviewStorage.createReview(review);
+        eventServiceImpl.createEvent(review.getUserId(), EventType.REVIEW, Operation.ADD,review.getReviewId());
         log.info("Создан отзыв:\n{}", createReview);
         return createReview;
     }
@@ -50,14 +56,16 @@ public class ReviewServiceImpl implements ReviewService {
             review.setUseful(oldReview.getUseful());
         }
         jdbcReviewStorage.updateReview(review);
+        eventServiceImpl.createEvent(review.getUserId(), EventType.REVIEW, Operation.UPDATE,review.getReviewId());
         log.info("Обновлённый отзыв:\n{}", review);
         return review;
     }
 
     @Override
     public void deleteReviewById(long reviewId) {
-        getReviewById(reviewId);
+        Review review = getReviewById(reviewId);
         jdbcReviewStorage.deleteReviewById(reviewId);
+        eventServiceImpl.createEvent(review.getUserId(), EventType.REVIEW, Operation.REMOVE,review.getReviewId());
         log.info("Отзыв удалён. ID отзыва:{}", reviewId);
     }
 

@@ -107,8 +107,8 @@ public class FilmServiceImpl implements FilmService {
      */
     @Override
     public void addLikeToFilm(long filmId, long userId) {
-        eventServiceImpl.createEvent(userId, EventType.LIKE, Operation.ADD,filmId);
         jdbcFilmRepository.addLikeToFilm(filmId, userId);
+        eventServiceImpl.createEvent(userId, EventType.LIKE, Operation.ADD,filmId);
     }
 
     /**
