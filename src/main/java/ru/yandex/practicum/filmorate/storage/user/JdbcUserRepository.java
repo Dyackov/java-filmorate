@@ -32,15 +32,9 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserStor
     private static final String GET_USER_BY_ID_QUERY = "SELECT * FROM users WHERE user_id = ?";
     private static final String ADD_FRIEND_QUERY = "INSERT INTO friends (user_id,friend_id,status) VALUES (?,?,?)";
     private static final String DELETE_FRIEND_QUERY = "DELETE FROM friends WHERE user_id = ? AND friend_id = ?";
-
-
-
     private static final String DELETE_ALL_USERS_QUERY = "DELETE FROM users";
     private static final String DELETE_BY_ID_USER_QUERY = "DELETE FROM users WHERE user_id = ?";
-
     private static final String FIND_ALL_USERS_QUERY = "SELECT * FROM users";
-
-
 
     private static final String GET_ID_USER_FRIENDS_QUERY = "SELECT friend_id FROM friends WHERE user_id = ?";
 

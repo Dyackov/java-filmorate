@@ -24,9 +24,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review createReview(Review review) {
-//        if (review.getUserId() < ZERO || review.getFilmId() < ZERO) {
-//            throw new NotFoundException("Идентификатор должен быть больше 0.");
-//        }
         userServiceImpl.getUserById(review.getUserId());
         filmServiceImpl.getFilmById(review.getFilmId());
         review.setUseful(0);
@@ -39,13 +36,6 @@ public class ReviewServiceImpl implements ReviewService {
     public Review updateReview(Review review) {
         Review oldReview = getReviewById(review.getReviewId());
         log.info("Старый отзыв:\n{}", oldReview);
-//        Review updateReview = review;
-//        if (review.getUseful() == null) {
-//            updateReview.setUseful(oldReview.getUseful());
-//        }
-//        jdbcReviewStorage.updateReview(updateReview);
-//        log.info("Обновлённый отзыв:\n{}", updateReview);
-//        return updateReview;
         if (review.getUseful() == null) {
             review.setUseful(oldReview.getUseful());
         }

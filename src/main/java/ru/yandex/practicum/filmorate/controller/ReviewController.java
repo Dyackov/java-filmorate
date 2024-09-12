@@ -81,7 +81,4 @@ public class ReviewController {
         log.info("Запрос на удаление дизлайка отзыву. ID отзыва: {}, ID пользователя: {}",id,userId);
         reviewServiceImpl.deleteDisLikeReview(id,userId);
     }
-
-
-
 }
