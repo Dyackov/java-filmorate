@@ -106,7 +106,7 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserStor
     public User getUserById(long userId) {
         User user = findOne(GET_USER_BY_ID_QUERY, userId).orElseThrow(() -> {
             String errorMessage = "Пользователя с ID - " + userId + " не существует.";
-            log.warn("Ошибка пользователя по ID {}: {}", userId, errorMessage);
+            log.warn("Ошибка получения: {}", errorMessage);
             return new NotFoundException(errorMessage);
         });
         user.setFriendsId(getIdUserFriends(userId));
