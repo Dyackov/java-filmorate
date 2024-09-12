@@ -31,6 +31,15 @@ public class BaseRepository<T> {
         }
     }
 
+    protected Optional<Boolean> findOneBoolean(String query, Object... params) {
+        try {
+            Boolean result = jdbc.queryForObject(query, new SingleColumnRowMapper<>(Boolean.class), params);
+            return Optional.ofNullable(result);
+        } catch (EmptyResultDataAccessException ignored) {
+            return Optional.empty();
+        }
+    }
+
     protected List<Long> findManyFriendsId(String query, Object... params) {
         return jdbc.query(query, new SingleColumnRowMapper<>(Long.class), params);
     }
