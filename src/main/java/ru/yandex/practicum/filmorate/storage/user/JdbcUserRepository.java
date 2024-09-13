@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.storage.BaseRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.BaseRepository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +49,8 @@ public class JdbcUserRepository extends BaseRepository<User> implements UserStor
             JOIN friends f ON u.user_id = f.friend_id
             WHERE f.user_id = ?
             """;
+
+
 
     /**
      * Создание пользователя.

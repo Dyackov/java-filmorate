@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NoUsersFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.enums.EventType;
+import ru.yandex.practicum.filmorate.model.enums.Operation;
+import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.validator.Validator;
 
@@ -15,13 +18,15 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserStorage jdbcUserRepository;
+    private final EventServiceImpl eventServiceImpl;
     private static final String CONFIRMED = "CONFIRMED";
     private static final String UNCONFIRMED = "UNCONFIRMED";
 
 
     @Autowired
-    public UserServiceImpl(UserStorage jdbcUserRepository) {
+    public UserServiceImpl(UserStorage jdbcUserRepository, EventServiceImpl eventServiceImpl) {
         this.jdbcUserRepository = jdbcUserRepository;
+        this.eventServiceImpl = eventServiceImpl;
     }
 
     /**
@@ -59,6 +64,7 @@ public class UserServiceImpl implements UserService {
             jdbcUserRepository.updateStatus(friendId, userId, status);
         }
         jdbcUserRepository.addFriend(userId, friendId,status);
+        eventServiceImpl.createEvent(userId, EventType.FRIEND, Operation.ADD,friendId);
         log.info("Пользователь ID: {} добавил в друзья пользователя ID: {}.", userId, friendId);
     }
 
@@ -74,6 +80,7 @@ public class UserServiceImpl implements UserService {
             jdbcUserRepository.updateStatus(friendId, userId, UNCONFIRMED);
         }
         jdbcUserRepository.removeFriend(userId, friendId);
+        eventServiceImpl.createEvent(userId, EventType.FRIEND, Operation.REMOVE,friendId);
         log.info("Пользователь c ID: {} удалил из друзей пользователя с ID: {}.", userId, friendId);
     }
 
